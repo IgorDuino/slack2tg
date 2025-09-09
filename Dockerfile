@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1.7
-
 FROM python:3.12-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -15,7 +13,7 @@ WORKDIR /app
 # Install uv and runtime deps layer
 RUN pip install --no-cache-dir uv
 
-COPY pyproject.toml /app/
+COPY pyproject.toml uv.lock /app/
 RUN uv sync --no-dev --frozen
 
 COPY app /app/app
