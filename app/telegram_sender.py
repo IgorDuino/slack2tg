@@ -29,6 +29,10 @@ class TelegramClient:
         self.retry_max = settings.retry_max
         self.retry_backoff = settings.retry_backoff
 
+    async def aclose(self) -> None:
+        # Close underlying aiohttp session
+        await self.bot.session.close()
+
     async def _retry_call(self, coro_factory, *args, **kwargs):
         attempt = 0
         while True:

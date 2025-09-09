@@ -13,6 +13,21 @@ settings = get_settings()
 configure_logging()
 
 app = FastAPI(title="slack2tg")
+telegram_client: TelegramClient | None = None
+
+
+@app.on_event("startup")
+async def on_startup() -> None:
+    global telegram_client
+    telegram_client = TelegramClient()
+
+
+@app.on_event("shutdown")
+async def on_shutdown() -> None:
+    global telegram_client
+    if telegram_client is not None:
+        await telegram_client.aclose()
+        telegram_client = None
 
 
 @app.get("/healthz")
@@ -43,7 +58,7 @@ async def hook(route_key: str, request: Request) -> JSONResponse:
     slack_channel = (payload.get("channel") or "").strip()
     chat_id = resolve_chat_id(route_key, slack_channel)
 
-    tg = TelegramClient()
+    tg = telegram_client or TelegramClient()
     # Media first
     if parsed.images:
         if len(parsed.images) > 1:
