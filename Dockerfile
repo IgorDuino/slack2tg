@@ -19,7 +19,8 @@ RUN uv sync --no-dev --frozen
 COPY app /app/app
 COPY README.md /app/
 
-RUN groupadd -g 10001 app && useradd -m -u 10000 -g 10001 app
+RUN groupadd -g 10001 app && useradd -m -u 10000 -g 10001 app && \
+    chown -R app:app /app
 USER app
 
 EXPOSE 8080
@@ -27,6 +28,6 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
   CMD curl -fsS http://127.0.0.1:8080/healthz || exit 1
 
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uv", "run", "--no-dev", "--frozen", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
 
 
