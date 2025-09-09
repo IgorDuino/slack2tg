@@ -5,18 +5,5 @@ services:
     restart: unless-stopped
     ports:
       - "8080:8080"
-    environment:
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      DEFAULT_CHAT_ID: ${DEFAULT_CHAT_ID}
-      ROUTING_MAP: ${ROUTING_MAP:-{}}
-      DISABLE_WEB_PREVIEW: ${DISABLE_WEB_PREVIEW:-false}
-      PARSE_MODE: ${PARSE_MODE:-MarkdownV2}
-      MAX_MEDIA: ${MAX_MEDIA:-10}
-      SHARED_SECRET: ${SHARED_SECRET:-}
-      ALLOW_IPS: ${ALLOW_IPS:-}
-      RETRY_MAX: ${RETRY_MAX:-3}
-      RETRY_BACKOFF: ${RETRY_BACKOFF:-0.5}
-      LOG_LEVEL: ${LOG_LEVEL:-INFO}
-      JSON_LOGS: ${JSON_LOGS:-true}
-
-
+    env_file:
+      - .env
